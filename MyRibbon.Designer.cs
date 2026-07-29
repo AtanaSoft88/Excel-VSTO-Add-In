@@ -37,9 +37,7 @@ namespace excelAddInTest
         {
             this.tab1 = this.Factory.CreateRibbonTab();
             this.group1 = this.Factory.CreateRibbonGroup();
-            this.loadFromDbBtn = this.Factory.CreateRibbonButton();
-            this.calcCommissionBtn = this.Factory.CreateRibbonButton();
-            this.clearBtn = this.Factory.CreateRibbonButton();
+            this.togglePanel = this.Factory.CreateRibbonButton();
             this.tab1.SuspendLayout();
             this.group1.SuspendLayout();
             this.SuspendLayout();
@@ -53,29 +51,15 @@ namespace excelAddInTest
             // 
             // group1
             // 
-            this.group1.Items.Add(this.loadFromDbBtn);
-            this.group1.Items.Add(this.calcCommissionBtn);
-            this.group1.Items.Add(this.clearBtn);
+            this.group1.Items.Add(this.togglePanel);
             this.group1.Label = "*";
             this.group1.Name = "group1";
             // 
-            // loadFromDbBtn
+            // togglePanel
             // 
-            this.loadFromDbBtn.Label = "Load from DB";
-            this.loadFromDbBtn.Name = "loadFromDbBtn";
-            this.loadFromDbBtn.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.loadFromDbBtn_Click);
-            // 
-            // calcCommissionBtn
-            // 
-            this.calcCommissionBtn.Label = "Calculate Commision";
-            this.calcCommissionBtn.Name = "calcCommissionBtn";
-            this.calcCommissionBtn.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.calcCommissionBtn_Click);
-            // 
-            // clearBtn
-            // 
-            this.clearBtn.Label = "Clear Commission";
-            this.clearBtn.Name = "clearBtn";
-            this.clearBtn.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.clearBtn_Click);
+            this.togglePanel.Label = "Show Panel";
+            this.togglePanel.Name = "togglePanel";
+            this.togglePanel.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btnTogglePanel_Click);
             // 
             // MyRibbon
             // 
@@ -94,9 +78,7 @@ namespace excelAddInTest
 
         internal Microsoft.Office.Tools.Ribbon.RibbonTab tab1;
         internal Microsoft.Office.Tools.Ribbon.RibbonGroup group1;
-        internal Microsoft.Office.Tools.Ribbon.RibbonButton calcCommissionBtn;
-        internal Microsoft.Office.Tools.Ribbon.RibbonButton clearBtn;
-        internal Microsoft.Office.Tools.Ribbon.RibbonButton loadFromDbBtn;
+        internal Microsoft.Office.Tools.Ribbon.RibbonButton togglePanel;
     }
 
     partial class ThisRibbonCollection
