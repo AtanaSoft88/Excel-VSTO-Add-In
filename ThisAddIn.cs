@@ -5,7 +5,7 @@ namespace excelAddInTest
 {
     public partial class ThisAddIn
     {
-        // 1. ДЕФИНИРАНЕ: Това е свойството, което MyRibbon търси и не намираше в момента!
+        // 1. Definition
         public Microsoft.Office.Tools.CustomTaskPane MyCustomPane { get; private set; }
 
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
@@ -16,7 +16,7 @@ namespace excelAddInTest
             // 3. Attaching Side Panel to Excel
             MyCustomPane = this.CustomTaskPanes.Add(sidePanelUi, "SaaS Real Estate Analytics");
 
-            // 4. КОНФИГУРАЦИЯ: Задаваме му ширина и позиция отдясно
+            // 4.Config Panel location - docked to the right side
             MyCustomPane.Width = 320;
             MyCustomPane.DockPosition = Microsoft.Office.Core.MsoCTPDockPosition.msoCTPDockPositionRight;
         }
