@@ -82,10 +82,10 @@ namespace excelAddInTest
                 int lastRow = lastCell.Row;
 
                 if (lastRow < 2)
-                {
+                {                    
                     // OBSERVABILITY: Log specific structural warning data before dropping out
                     LoggerService.LogError("Calculation halted. Reason: Column A data context was empty.", null, nameof(calculateBtn));
-                    MessageBox.Show("No active dataset found in Column A. Please initialize data first.", "Data Missing", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("No active dataset found in Column A. Please initialize data first.", "Data Missing", MessageBoxButtons.OK, MessageBoxIcon.Warning);                    
                     return;
                 }
 
