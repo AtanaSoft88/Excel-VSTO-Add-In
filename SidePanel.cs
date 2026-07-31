@@ -1,8 +1,9 @@
-﻿using excelAddInTest.Dto;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
+using excelAddInTest.Services; // ЗАДЪЛЖИТЕЛНО: Включваме логъра от неговата папка!
+using excelAddInTest.Dto;
 
 namespace excelAddInTest
 {
@@ -16,13 +17,22 @@ namespace excelAddInTest
         // --- STEP 1: LOAD PROPERTY PRICES FROM LOCAL MOCK DATABASE ---
         private async void loadBtn_Click(object sender, EventArgs e)
         {
+            // TELEMETRY: Record that user initialized data load sequence
+            LoggerService.LogAction("User triggered remote database synchronization process.", nameof(loadBtn));
+
             try
             {
-                // Invoke our isolated database initializer service layer
+                loadBtn.Text = "Loading from API...";
+                loadBtn.Enabled = false;
+
                 DataResult result = await DataInitializer.LoadPropertyPricesAsync();
+
+                loadBtn.Text = "Load from DB";
+                loadBtn.Enabled = true;
 
                 if (!result.IsSuccess)
                 {
+                    LoggerService.LogError($"API Sync failed. Message returned: {result.Message}", null, nameof(loadBtn));
                     MessageBox.Show(result.Message, "Database Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
@@ -35,25 +45,25 @@ namespace excelAddInTest
                     if (double.TryParse(result.PropertyPrices[i], out double price))
                         priceData[i, 0] = price;
                     else
-                        priceData[i, 0] = 0; // Gracefully handle invalid format data entries
+                        priceData[i, 0] = 0;
                 }
 
-                // Locate the active spreadsheet instance safely via global reference context
                 Excel.Worksheet activeSheet = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveSheet;
-
-                // Write standard descriptive column header text in row 1
                 activeSheet.get_Range("A1").Value2 = "Property Price in €";
 
-                // Setup dynamic target row selection grid boundaries from cell A2 downward
                 Excel.Range targetRange = activeSheet.get_Range("A2", "A" + (rowsCount + 1));
-
-                // Process structural in-memory object block array write straight into Excel sheet
                 targetRange.Value2 = priceData;
 
+                LoggerService.LogAction($"Successfully rendered [{rowsCount}] property rows directly to worksheet active layout.", nameof(loadBtn));
                 MessageBox.Show(result.Message, "Data Loaded", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
+                loadBtn.Text = "Load from DB";
+                loadBtn.Enabled = true;
+
+                // OBSERVABILITY: Shifting full thread exception metrics up to Azure Cloud Logs Workspace
+                LoggerService.LogError("Critical I/O connection failure occurred during spreadsheet loading.", ex, nameof(loadBtn));
                 MessageBox.Show("Failed to complete database operation: " + ex.Message, "I/O Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -61,44 +71,41 @@ namespace excelAddInTest
         // --- STEP 2: CALCULATE COMMISSION WITH HIGHLY OPTIMIZED IN-MEMORY CACHE ---
         private void calculateBtn_Click(object sender, EventArgs e)
         {
+            // TELEMETRY: Trace user intent
+            LoggerService.LogAction("User initiated optimization engine for commission bulk calculation.", nameof(calculateBtn));
+
             try
             {
                 Excel.Worksheet activeSheet = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveSheet;
 
-                // Dynamically evaluate spreadsheet depth based on cell content validation
                 Excel.Range lastCell = activeSheet.Cells[activeSheet.Rows.Count, "A"].End(Excel.XlDirection.xlUp);
                 int lastRow = lastCell.Row;
 
                 if (lastRow < 2)
                 {
+                    // OBSERVABILITY: Log specific structural warning data before dropping out
+                    LoggerService.LogError("Calculation halted. Reason: Column A data context was empty.", null, nameof(calculateBtn));
                     MessageBox.Show("No active dataset found in Column A. Please initialize data first.", "Data Missing", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
-                // High recall data chunk reading structure prevents Excel thread execution lag
                 Excel.Range priceRange = activeSheet.get_Range("A2", "A" + lastRow);
                 object[,] priceValues = (object[,])priceRange.Value2;
 
                 object[,] commissionResults = new object[lastRow - 1, 1];
-
-                // Construct temporary application dictionary buffer to hold mathematical lookups
                 Dictionary<double, double> commissionCache = new Dictionary<double, double>();
 
                 for (int i = 1; i <= priceValues.GetLength(0); i++)
                 {
                     if (priceValues[i, 1] != null && double.TryParse(priceValues[i, 1].ToString(), out double price))
                     {
-                        // Check local cache dictionary before running mathematical operations
                         if (commissionCache.ContainsKey(price))
                         {
                             commissionResults[i - 1, 0] = commissionCache[price];
                         }
                         else
                         {
-                            // Calculate 3% commission on cache miss
                             double commission = price * 0.03;
-
-                            // Store the result in cache for subsequent duplicate rows
                             commissionCache[price] = commission;
                             commissionResults[i - 1, 0] = commission;
                         }
@@ -109,17 +116,17 @@ namespace excelAddInTest
                     }
                 }
 
-                // Place corresponding target business metric header value label
                 activeSheet.get_Range("B1").Value2 = "Commission (3%)";
-
-                // Flush result data collection out to spreadsheet workspace grid layout
                 Excel.Range resultRange = activeSheet.get_Range("B2", "B" + lastRow);
                 resultRange.Value2 = commissionResults;
 
+                LoggerService.LogAction($"Bulk pricing evaluation finished successfully. Handled entries: [{lastRow - 1}].", nameof(calculateBtn));
                 MessageBox.Show($"Successfully processed [{lastRow - 1}] entries using In-Memory optimization!", "Calculation Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
+                // OBSERVABILITY: Ship complete system crashed analytics directly to Azure
+                LoggerService.LogError("Runtime mathematical matrix calculation collapsed during execution runtime.", ex, nameof(calculateBtn));
                 MessageBox.Show("An unexpected error occurred during bulk calculation: " + ex.Message, "Runtime Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -127,6 +134,8 @@ namespace excelAddInTest
         // --- MANAGEMENT OPERATIONS: CLEAR CALCULATED BUSINESS ENTRIES ---
         private void clearBtn_Click(object sender, EventArgs e)
         {
+            LoggerService.LogAction("User triggered workspace layout sanitization.", nameof(clearBtn));
+
             try
             {
                 Excel.Worksheet activeSheet = (Excel.Worksheet)Globals.ThisAddIn.Application.ActiveSheet;
@@ -140,14 +149,15 @@ namespace excelAddInTest
                     return;
                 }
 
-                // Clear structural cell value elements while explicitly preserving workspace borders
                 Excel.Range rangeToClear = activeSheet.get_Range("B2", "B" + lastRow);
                 rangeToClear.ClearContents();
 
+                LoggerService.LogAction("Worksheet targets flushed and wiped clean successfully.", nameof(clearBtn));
                 MessageBox.Show("Calculated commission data was successfully removed.", "Data Cleared", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
+                LoggerService.LogError("Exception captured while attempting to execute cell range execution wipe.", ex, nameof(clearBtn));
                 MessageBox.Show("Failed to clean up target spreadsheet cells: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
