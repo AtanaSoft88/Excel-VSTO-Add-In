@@ -1,9 +1,8 @@
-﻿using System;
+﻿using excelAddInTest.Services; 
+using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
-using excelAddInTest.Services; // ЗАДЪЛЖИТЕЛНО: Включваме логъра от неговата папка!
-using excelAddInTest.Dto;
 
 namespace excelAddInTest
 {
