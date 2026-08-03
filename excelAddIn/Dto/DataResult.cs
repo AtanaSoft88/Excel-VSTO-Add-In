@@ -1,4 +1,4 @@
-﻿namespace excelAddInTest.Dto
+﻿namespace excelAddInTest
 {
     public class DataResult
     {
