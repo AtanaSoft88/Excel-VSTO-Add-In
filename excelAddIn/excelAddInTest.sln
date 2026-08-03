@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.34407.143
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "excelAddInTest", "excelAddInTest.csproj", "{C6B87D8B-5301-4388-8FDD-318C668D4A6F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "excelAddInTest.Tests", "excelAddInTest.Tests\excelAddInTest.Tests.csproj", "{62ABFCDD-93DF-4539-98A8-3960DE819F9E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "excelAddInTest.Tests", "..\excelAddInTest.Tests\excelAddInTest.Tests.csproj", "{D01C3D1E-3D5E-490C-A39D-E4E566C9DB46}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{C6B87D8B-5301-4388-8FDD-318C668D4A6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6B87D8B-5301-4388-8FDD-318C668D4A6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6B87D8B-5301-4388-8FDD-318C668D4A6F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{62ABFCDD-93DF-4539-98A8-3960DE819F9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{62ABFCDD-93DF-4539-98A8-3960DE819F9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{62ABFCDD-93DF-4539-98A8-3960DE819F9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{62ABFCDD-93DF-4539-98A8-3960DE819F9E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D01C3D1E-3D5E-490C-A39D-E4E566C9DB46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D01C3D1E-3D5E-490C-A39D-E4E566C9DB46}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D01C3D1E-3D5E-490C-A39D-E4E566C9DB46}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D01C3D1E-3D5E-490C-A39D-E4E566C9DB46}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
